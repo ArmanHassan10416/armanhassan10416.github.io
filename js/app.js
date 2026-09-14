@@ -1,3 +1,4 @@
+/* SUBTLE RE-SCROLL SECTION MOTION BUILD: 20260914-subtle-rescroll-v1 */
 /* SUBTLE PROFESSIONAL MOTION BUILD: 20260913-subtle-motion-v2 */
 /* REFERENCE-INSPIRED MOTION BUILD: 20260913-reference-motion-v1 */
 /* CLEAN BRIDGE MARKERS BUILD: 20260910-clean-bridge-icons-v1 */
@@ -338,10 +339,31 @@
 
     const sectionObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
+        const section = entry.target;
+
         if (entry.isIntersecting) {
-          activateSection(entry.target);
-          // Entry animation only needs to run once.
-          sectionObserver.unobserve(entry.target);
+          const hasBeenSeen = section.dataset.sectionSeen === 'true';
+
+          // First visit uses the normal subtle section reveal.
+          // Re-visits keep the section marked as "seen" so CSS uses
+          // a much smaller movement / opacity change.
+          if (hasBeenSeen) section.classList.add('section-seen');
+
+          activateSection(section);
+
+          if (!hasBeenSeen) {
+            section.dataset.sectionSeen = 'true';
+
+            // Only enable the gentler re-scroll state after the
+            // first entrance has had time to complete.
+            window.setTimeout(() => {
+              section.classList.add('section-seen');
+            }, 1150);
+          }
+        } else if (section.dataset.sectionSeen === 'true') {
+          // Reset only the section-level state after it leaves the
+          // viewport. Child cards/items remain permanently revealed.
+          section.classList.remove('section-active');
         }
       });
     }, {

@@ -1,3 +1,4 @@
+/* SUBTLE RE-SCROLL STYLE BUILD: 20260914-subtle-rescroll-v1 */
 /* SUBTLE PROFESSIONAL MOTION STYLE BUILD: 20260913-subtle-motion-v2 */
 /* REFERENCE-INSPIRED MOTION STYLE BUILD: 20260913-reference-motion-v1 */
 /* CLEAN BRIDGE ICON STYLE BUILD: 20260910-clean-bridge-icons-v1 */
@@ -2388,5 +2389,79 @@ body.detail-page-ready .detail-root{
     filter:none !important;
     transition:none !important;
     animation:none !important;
+  }
+}
+
+
+/* ==========================================================
+   SUBTLE SECTION RE-SCROLL
+   First entry keeps the existing section reveal.
+   Once a section has been seen, re-entry uses only a tiny local
+   settle. Individual cards/text do NOT replay.
+   ========================================================== */
+
+/* Resting state after a previously viewed section leaves view. */
+.section-motion-ready .portfolio-section.section-seen:not(.section-active) > .container{
+  opacity:.91 !important;
+  transform:translateY(5px) !important;
+  filter:none !important;
+  transition:
+    opacity .68s ease,
+    transform .76s cubic-bezier(.22,.68,.2,1) !important;
+}
+
+/* Re-entry settles from 5px to its normal position. */
+.section-motion-ready .portfolio-section.section-seen.section-active > .container{
+  opacity:1 !important;
+  transform:translateY(0) !important;
+  transition:
+    opacity .68s ease,
+    transform .76s cubic-bezier(.22,.68,.2,1) !important;
+}
+
+/* Heading replay is even lighter than the section body. */
+.section-motion-ready .portfolio-section.section-seen:not(.section-active) .section-head{
+  opacity:.95 !important;
+  transform:translateY(3px) !important;
+  transition:
+    opacity .62s ease,
+    transform .72s cubic-bezier(.22,.68,.2,1) !important;
+}
+
+.section-motion-ready .portfolio-section.section-seen.section-active .section-head{
+  opacity:1 !important;
+  transform:translateY(0) !important;
+}
+
+/* Divider only breathes slightly on re-entry; no sweep. */
+.portfolio-section.section-seen:not(.section-active)::after{
+  opacity:.40 !important;
+}
+.portfolio-section.section-seen.section-active::after{
+  opacity:.57 !important;
+}
+
+/* Mobile re-scroll should be almost imperceptible. */
+@media (max-width:760px){
+  .section-motion-ready .portfolio-section.section-seen:not(.section-active) > .container{
+    opacity:.94 !important;
+    transform:translateY(3px) !important;
+  }
+
+  .section-motion-ready .portfolio-section.section-seen:not(.section-active) .section-head{
+    opacity:.97 !important;
+    transform:translateY(2px) !important;
+  }
+}
+
+/* Reduced-motion visitors still get no movement. */
+@media (prefers-reduced-motion:reduce){
+  .section-motion-ready .portfolio-section.section-seen:not(.section-active) > .container,
+  .section-motion-ready .portfolio-section.section-seen.section-active > .container,
+  .section-motion-ready .portfolio-section.section-seen:not(.section-active) .section-head,
+  .section-motion-ready .portfolio-section.section-seen.section-active .section-head{
+    opacity:1 !important;
+    transform:none !important;
+    transition:none !important;
   }
 }
