@@ -1,3 +1,5 @@
+/* SUBTLE PROFESSIONAL MOTION STYLE BUILD: 20260913-subtle-motion-v2 */
+/* REFERENCE-INSPIRED MOTION STYLE BUILD: 20260913-reference-motion-v1 */
 /* CLEAN BRIDGE ICON STYLE BUILD: 20260910-clean-bridge-icons-v1 */
 /* FINAL SECTION + BULLET POLISH BUILD: 20260910-alt-sections-clean-v1 */
 /* STRONG SECTION TRANSITION STYLE BUILD: 20260910-section-transitions-v2 */
@@ -2053,5 +2055,338 @@ body.detail-page-ready .detail-root{
     left:20px;
     top:18px;
     width:30px;
+  }
+}
+
+
+/* ==========================================================
+   REFERENCE-INSPIRED SCROLL MOTION
+   Inspired by the supplied portfolio clip, but deliberately
+   restrained for academic / PhD outreach.
+   ========================================================== */
+
+/* Different entrance directions instead of one repeated fade-up. */
+.reveal.motion-left{
+  transform:translate3d(-30px,8px,0) scale(.994);
+}
+.reveal.motion-right{
+  transform:translate3d(30px,8px,0) scale(.994);
+}
+.reveal.motion-up{
+  transform:translate3d(0,28px,0) scale(.994);
+}
+.reveal.motion-scale{
+  transform:translate3d(0,18px,0) scale(.965);
+}
+
+.reveal.motion-left.visible,
+.reveal.motion-right.visible,
+.reveal.motion-up.visible,
+.reveal.motion-scale.visible{
+  transform:translate3d(0,0,0) scale(1);
+}
+
+/* Slightly smoother timing than the original basic reveal. */
+.reveal{
+  transition:
+    opacity .68s cubic-bezier(.2,.72,.2,1),
+    transform .72s cubic-bezier(.2,.72,.2,1),
+    filter .58s ease;
+  transition-delay:var(--reveal-delay,0ms);
+}
+
+/* Process / bridge / honors elements reveal sequentially after
+   their parent chapter enters the viewport. */
+.sequence-reveal{
+  opacity:0;
+  transform:translate3d(0,18px,0) scale(.975);
+  filter:blur(1.5px);
+  transition:
+    opacity .52s ease,
+    transform .62s cubic-bezier(.2,.72,.2,1),
+    filter .48s ease;
+  transition-delay:var(--sequence-delay,0ms);
+}
+
+.sequence-reveal.sequence-in{
+  opacity:1;
+  transform:none;
+  filter:blur(0);
+}
+
+/* Arrows feel like they connect the stages rather than just appear. */
+.bridge-arrow.sequence-reveal{
+  transform:translate3d(-10px,0,0);
+}
+.bridge-arrow.sequence-reveal.sequence-in{
+  transform:translate3d(0,0,0);
+}
+
+/* Research / project cards pick up a small settling motion. */
+.research-card-compact.visible,
+.project-card-link.visible,
+.interest-card.visible,
+.skill-card.visible,
+.education-card.visible{
+  will-change:auto;
+}
+
+/* Timeline dots arrive just after their timeline item. */
+.timeline-item.visible .timeline-dot{
+  animation:timelineDotIn .42s cubic-bezier(.2,.75,.2,1) .16s both;
+}
+@keyframes timelineDotIn{
+  from{opacity:0;transform:scale(.35)}
+  to{opacity:1;transform:scale(1)}
+}
+
+/* Detail-page variants */
+.detail-motion.detail-motion-left{
+  transform:translate3d(-26px,12px,0);
+}
+.detail-motion.detail-motion-right{
+  transform:translate3d(26px,12px,0);
+}
+.detail-motion.detail-motion-scale{
+  transform:translate3d(0,16px,0) scale(.97);
+}
+
+.detail-motion.motion-visible{
+  transform:none !important;
+}
+
+/* Image/gallery motion stays visual, but not "showy". */
+.gallery-item.detail-motion-scale img,
+.detail-hero-media img{
+  transition:transform .42s cubic-bezier(.2,.72,.2,1),filter .3s ease;
+}
+
+/* Desktop only: tiny section-title tracking effect as the chapter settles. */
+@media (min-width:761px){
+  .portfolio-section .section-head h2{
+    transition:letter-spacing .65s cubic-bezier(.2,.72,.2,1);
+  }
+  .portfolio-section.section-active .section-head h2{
+    letter-spacing:-.035em;
+  }
+}
+
+/* Touch devices get the entrance motion without cursor-heavy effects. */
+@media (max-width:760px){
+  .reveal.motion-left,
+  .reveal.motion-right{
+    transform:translate3d(0,20px,0) scale(.992);
+  }
+
+  .detail-motion.detail-motion-left,
+  .detail-motion.detail-motion-right{
+    transform:translate3d(0,18px,0);
+  }
+}
+
+/* Accessibility always wins. */
+@media (prefers-reduced-motion:reduce){
+  .reveal.motion-left,
+  .reveal.motion-right,
+  .reveal.motion-up,
+  .reveal.motion-scale,
+  .sequence-reveal,
+  .detail-motion.detail-motion-left,
+  .detail-motion.detail-motion-right,
+  .detail-motion.detail-motion-scale{
+    opacity:1 !important;
+    transform:none !important;
+    filter:none !important;
+    transition:none !important;
+    animation:none !important;
+  }
+
+  .timeline-item.visible .timeline-dot{
+    animation:none !important;
+  }
+}
+
+
+/* ==========================================================
+   SUBTLE PROFESSIONAL MOTION OVERRIDE
+   The site should feel alive, not animated for animation's sake.
+   Elements start close to their final position and settle in slowly.
+   Nothing flies in from the viewport border.
+   ========================================================== */
+
+/* Main content reveals: 12–18px only, never off-screen. */
+.reveal.motion-left{
+  transform:translate3d(-16px,6px,0) scale(.997) !important;
+}
+.reveal.motion-right{
+  transform:translate3d(16px,6px,0) scale(.997) !important;
+}
+.reveal.motion-up{
+  transform:translate3d(0,16px,0) scale(.997) !important;
+}
+.reveal.motion-scale{
+  transform:translate3d(0,12px,0) scale(.985) !important;
+}
+
+.reveal.motion-left.visible,
+.reveal.motion-right.visible,
+.reveal.motion-up.visible,
+.reveal.motion-scale.visible{
+  transform:translate3d(0,0,0) scale(1) !important;
+}
+
+/* Slower and softer than the previous reference-motion build. */
+.reveal{
+  transition:
+    opacity .88s cubic-bezier(.22,.68,.2,1),
+    transform .92s cubic-bezier(.22,.68,.2,1),
+    filter .72s ease !important;
+  transition-delay:var(--reveal-delay,0ms) !important;
+}
+
+/* Sequential groups: small rise only. */
+.sequence-reveal{
+  opacity:0 !important;
+  transform:translate3d(0,12px,0) scale(.992) !important;
+  filter:none !important;
+  transition:
+    opacity .74s ease,
+    transform .84s cubic-bezier(.22,.68,.2,1) !important;
+  transition-delay:var(--sequence-delay,0ms) !important;
+}
+.sequence-reveal.sequence-in{
+  opacity:1 !important;
+  transform:none !important;
+}
+
+/* Connecting arrows should simply resolve into place. */
+.bridge-arrow.sequence-reveal{
+  transform:translate3d(-6px,0,0) !important;
+}
+.bridge-arrow.sequence-reveal.sequence-in{
+  transform:translate3d(0,0,0) !important;
+}
+
+/* Section-to-section transition:
+   no left/right sweep from the page edge; just a calm local settle. */
+.section-motion-ready .portfolio-section > .container{
+  opacity:.50 !important;
+  transform:translateY(18px) !important;
+  filter:none !important;
+  transition:
+    opacity .92s ease,
+    transform 1.00s cubic-bezier(.22,.68,.2,1) !important;
+}
+
+.section-motion-ready .portfolio-section.section-active > .container{
+  opacity:1 !important;
+  transform:translateY(0) !important;
+}
+
+/* Disable the old chapter wash that traversed the whole section. */
+.portfolio-section::before{
+  opacity:0 !important;
+  transform:none !important;
+  animation:none !important;
+  background:none !important;
+}
+
+/* Keep the top divider as a static/subtle section cue rather than a sweep. */
+.portfolio-section::after{
+  transform:translateX(-50%) scaleX(1) !important;
+  opacity:.34 !important;
+  animation:none !important;
+  transition:opacity .70s ease !important;
+}
+.portfolio-section.section-active::after{
+  opacity:.60 !important;
+}
+
+/* Section heading: very small local movement. */
+.section-motion-ready .portfolio-section .section-head{
+  opacity:.62 !important;
+  transform:translateY(10px) !important;
+  transition:
+    opacity .82s ease .05s,
+    transform .92s cubic-bezier(.22,.68,.2,1) .05s !important;
+}
+.section-motion-ready .portfolio-section.section-active .section-head{
+  opacity:1 !important;
+  transform:translateY(0) !important;
+}
+
+/* Accent rail quietly grows in place, not from a border. */
+.section-marker{
+  transform:scaleY(.72) !important;
+  opacity:.52 !important;
+  transition:
+    transform .88s cubic-bezier(.22,.68,.2,1),
+    opacity .78s ease !important;
+}
+.section-head.visible .section-marker,
+.portfolio-section.section-active .section-marker{
+  transform:scaleY(1) !important;
+  opacity:1 !important;
+}
+
+/* Detail pages use the same restrained language. */
+.detail-motion.detail-motion-left{
+  transform:translate3d(-14px,8px,0) !important;
+}
+.detail-motion.detail-motion-right{
+  transform:translate3d(14px,8px,0) !important;
+}
+.detail-motion.detail-motion-scale{
+  transform:translate3d(0,10px,0) scale(.988) !important;
+}
+.detail-motion{
+  transition:
+    opacity .88s ease var(--detail-delay,0ms),
+    transform .94s cubic-bezier(.22,.68,.2,1) var(--detail-delay,0ms) !important;
+}
+.detail-motion.motion-visible{
+  transform:none !important;
+}
+
+/* Timeline dots: quiet appearance instead of a noticeable pop. */
+.timeline-item.visible .timeline-dot{
+  animation:subtleTimelineDotIn .62s cubic-bezier(.22,.68,.2,1) .18s both !important;
+}
+@keyframes subtleTimelineDotIn{
+  from{opacity:.2;transform:scale(.72)}
+  to{opacity:1;transform:scale(1)}
+}
+
+/* Mobile: use only a small upward movement. */
+@media (max-width:760px){
+  .reveal.motion-left,
+  .reveal.motion-right,
+  .reveal.motion-up{
+    transform:translate3d(0,12px,0) scale(.998) !important;
+  }
+
+  .detail-motion.detail-motion-left,
+  .detail-motion.detail-motion-right{
+    transform:translate3d(0,10px,0) !important;
+  }
+
+  .section-motion-ready .portfolio-section > .container{
+    transform:translateY(12px) !important;
+  }
+}
+
+/* Accessibility remains fully respected. */
+@media (prefers-reduced-motion:reduce){
+  .reveal,
+  .sequence-reveal,
+  .detail-motion,
+  .section-motion-ready .portfolio-section > .container,
+  .section-motion-ready .portfolio-section .section-head,
+  .section-marker{
+    opacity:1 !important;
+    transform:none !important;
+    filter:none !important;
+    transition:none !important;
+    animation:none !important;
   }
 }
