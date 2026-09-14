@@ -2390,3 +2390,236 @@ body.detail-page-ready .detail-root{
     animation:none !important;
   }
 }
+/* ==========================================================
+   NAVBAR POLISH — PROFESSIONAL ACADEMIC VERSION
+   ========================================================== */
+
+/* Give the header its own clear visual layer */
+.nav {
+  background: rgba(255, 255, 255, 0.94) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  border-bottom: 1px solid rgba(16, 32, 51, 0.09) !important;
+  box-shadow: 0 5px 22px rgba(16, 32, 51, 0.055);
+
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+/* Slightly more compact than the current header */
+.nav-inner {
+  height: 68px !important;
+}
+
+/* ----------------------------------------------------------
+   NAME / IDENTITY
+   ---------------------------------------------------------- */
+
+.brand {
+  color: var(--navy) !important;
+
+  font-size: 1.08rem !important;
+  font-weight: 850 !important;
+
+  letter-spacing: 0.065em !important;
+  line-height: 1;
+
+  white-space: nowrap;
+}
+
+/* ----------------------------------------------------------
+   NAVIGATION
+   ---------------------------------------------------------- */
+
+.nav-links {
+  gap: 5px !important;
+
+  font-size: 0.87rem !important;
+  font-weight: 520;
+
+  color: #637184 !important;
+}
+
+/* Give each tab its own interaction area */
+.nav-links a {
+  position: relative;
+
+  padding: 9px 10px;
+  border-radius: 9px;
+
+  transition:
+    color 0.22s ease,
+    background-color 0.22s ease;
+}
+
+/* Calm hover state */
+.nav-links a:hover {
+  color: var(--navy) !important;
+  background: rgba(40, 164, 191, 0.055);
+}
+
+/* ----------------------------------------------------------
+   ACTIVE TAB
+   Much clearer than the old underline-only state
+   ---------------------------------------------------------- */
+
+.nav-links a.active {
+  color: var(--navy) !important;
+
+  font-weight: 700;
+
+  background: rgba(40, 164, 191, 0.09);
+}
+
+/* Replace the long underline with a short integrated accent */
+.nav-links a::after {
+  content: "";
+
+  position: absolute;
+
+  left: 10px !important;
+  right: 10px !important;
+  bottom: 3px !important;
+
+  height: 2px !important;
+
+  border-radius: 999px;
+
+  background: var(--cyan) !important;
+
+  transform: scaleX(0) !important;
+  transform-origin: center !important;
+
+  opacity: 0 !important;
+
+  transition:
+    transform 0.28s ease,
+    opacity 0.28s ease !important;
+}
+
+.nav-links a.active::after {
+  transform: scaleX(1) !important;
+  opacity: 0.9 !important;
+}
+
+/* Hover shouldn't create a competing underline */
+.nav-links a:hover::after {
+  transform: scaleX(0) !important;
+  opacity: 0 !important;
+}
+
+.nav-links a.active:hover::after {
+  transform: scaleX(1) !important;
+  opacity: 0.9 !important;
+}
+
+/* ----------------------------------------------------------
+   EMAIL / CV BUTTONS
+   ---------------------------------------------------------- */
+
+.nav-actions {
+  gap: 9px !important;
+}
+
+.nav-btn {
+  padding: 9px 15px !important;
+
+  min-height: 42px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 0.9rem;
+  font-weight: 700;
+
+  border-radius: 999px;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+/* Email stays secondary */
+.nav-btn:not(.primary) {
+  background: rgba(255, 255, 255, 0.8) !important;
+
+  border-color: rgba(16, 32, 51, 0.12) !important;
+
+  color: var(--navy);
+}
+
+/* CV stays primary */
+.nav-btn.primary {
+  background: var(--navy) !important;
+  color: white !important;
+
+  border-color: var(--navy) !important;
+
+  box-shadow: 0 4px 12px rgba(7, 26, 47, 0.10);
+}
+
+.nav-btn:hover {
+  transform: translateY(-1px);
+}
+
+/* ----------------------------------------------------------
+   READING PROGRESS
+   Keep it, but make it much more elegant
+   ---------------------------------------------------------- */
+
+.scroll-progress {
+  height: 2px !important;
+
+  background:
+    linear-gradient(
+      90deg,
+      #237f99,
+      #41afbf
+    ) !important;
+
+  box-shadow: none !important;
+
+  opacity: 0.78;
+
+  z-index: 500;
+}
+
+/* ----------------------------------------------------------
+   RESPONSIVE TUNING
+   ---------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+  .brand {
+    font-size: 1rem !important;
+  }
+
+  .nav-links {
+    gap: 2px !important;
+    font-size: 0.83rem !important;
+  }
+
+  .nav-links a {
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+  .nav-btn {
+    padding-left: 13px !important;
+    padding-right: 13px !important;
+  }
+}
+
+/* Don't interfere with the existing mobile menu system */
+@media (max-width: 860px) {
+  .nav-inner {
+    height: 66px !important;
+  }
+
+  .brand {
+    font-size: 1.02rem !important;
+  }
+}
