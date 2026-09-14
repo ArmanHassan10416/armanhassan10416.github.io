@@ -1,6 +1,4 @@
-/* GUARANTEED RE-SCROLL MOTION BUILD: 20260914-rescroll-waapi-v3 */
-/* FIXED RE-SCROLL TRIGGER BUILD: 20260914-rescroll-fixed-v2 */
-/* SUBTLE RE-SCROLL SECTION MOTION BUILD: 20260914-subtle-rescroll-v1 */
+/* RELIABLE SUBTLE RE-SCROLL BUILD: 20260914-rescroll-reliable-v4 */
 /* SUBTLE PROFESSIONAL MOTION BUILD: 20260913-subtle-motion-v2 */
 /* REFERENCE-INSPIRED MOTION BUILD: 20260913-reference-motion-v1 */
 /* CLEAN BRIDGE MARKERS BUILD: 20260910-clean-bridge-icons-v1 */
@@ -339,110 +337,119 @@
       });
     };
 
-    const replaySectionMotion = (section) => {
-      if (reduceMotion) return;
-
-      const container = section.querySelector(':scope > .container');
-      const heading = section.querySelector('.section-head');
-      const marker = section.querySelector('.section-marker');
-
-      /* Cancel any previous replay on this section so fast scrolling
-         never leaves two animations fighting each other. */
-      [container, heading, marker].forEach(el => {
-        if (!el || !el.getAnimations) return;
-        el.getAnimations().forEach(anim => {
-          if (anim.id && anim.id.startsWith('section-rescroll-')) anim.cancel();
-        });
-      });
-
-      if (container) {
-        const animation = container.animate(
-          [
-            { opacity: 0.90, transform: 'translateY(8px)' },
-            { opacity: 1, transform: 'translateY(0)' }
-          ],
-          {
-            duration: 760,
-            easing: 'cubic-bezier(.22,.68,.2,1)',
-            fill: 'none'
-          }
-        );
-        animation.id = 'section-rescroll-container';
-      }
-
-      if (heading) {
-        const animation = heading.animate(
-          [
-            { opacity: 0.94, transform: 'translateY(4px)' },
-            { opacity: 1, transform: 'translateY(0)' }
-          ],
-          {
-            duration: 680,
-            easing: 'cubic-bezier(.22,.68,.2,1)',
-            fill: 'none'
-          }
-        );
-        animation.id = 'section-rescroll-heading';
-      }
-
-      if (marker) {
-        const animation = marker.animate(
-          [
-            { opacity: 0.68, transform: 'scaleY(.88)' },
-            { opacity: 1, transform: 'scaleY(1)' }
-          ],
-          {
-            duration: 620,
-            easing: 'cubic-bezier(.22,.68,.2,1)',
-            fill: 'none'
-          }
-        );
-        animation.id = 'section-rescroll-marker';
-      }
-    };
-
     const sectionObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
-        const section = entry.target;
-
         if (entry.isIntersecting) {
-          const hasBeenSeen = section.dataset.sectionSeen === 'true';
-          const wasInside = section.dataset.sectionInside === 'true';
-
-          if (hasBeenSeen) section.classList.add('section-seen');
-          activateSection(section);
-
-          /* On the first visit we keep the normal site reveal.
-             On every later genuine re-entry, replay a smaller motion
-             directly with the Web Animations API. */
-          if (hasBeenSeen && !wasInside) {
-            requestAnimationFrame(() => replaySectionMotion(section));
-          }
-
-          section.dataset.sectionSeen = 'true';
-          section.dataset.sectionInside = 'true';
-
-          if (!hasBeenSeen) {
-            window.setTimeout(() => {
-              section.classList.add('section-seen');
-            }, 1150);
-          }
-        } else {
-          section.dataset.sectionInside = 'false';
-
-          if (section.dataset.sectionSeen === 'true') {
-            section.classList.remove('section-active');
-          }
+          activateSection(entry.target);
+          // Entry animation only needs to run once.
+          sectionObserver.unobserve(entry.target);
         }
       });
     }, {
-      /* Trigger after the section has entered the inner viewport,
-         not when it merely touches the screen edge. */
-      threshold: 0,
-      rootMargin: '-12% 0px -12% 0px'
+      threshold: 0.07,
+      rootMargin: '0px 0px -10% 0px'
     });
 
     majorSections.forEach(section => sectionObserver.observe(section));
+
+    /* -------------------------------------------------------
+       Gentle section re-entry replay
+       -------------------------------------------------------
+       Important: the existing section/container reveal rules use
+       !important transforms. Animating those same elements can be
+       suppressed by CSS. So re-scroll motion is applied only to
+       inner group wrappers that are not owned by the one-time
+       reveal system. This makes the replay actually visible and
+       keeps it independent from the first-load animations. */
+
+    const reScrollTargets = (section) => {
+      const targets = [];
+
+      // Section title copy: animate the inner text block, not .section-head itself.
+      const titleCopy = section.querySelector('.section-head > div:last-child');
+      if (titleCopy) targets.push(titleCopy);
+
+      // Main content groups for each section.
+      section.querySelectorAll(
+        '.interest-grid, ' +
+        '.research-grid-compact, ' +
+        '.publication-list, ' +
+        '.bridge-stages, ' +
+        '.project-grid, ' +
+        '.experience-grid, ' +
+        '.skills-grid, ' +
+        '.about-grid'
+      ).forEach(el => targets.push(el));
+
+      // Additional content whose parent has one-time reveal styles.
+      section.querySelectorAll(
+        '.education-card > div, ' +
+        '.honors-strip > div, ' +
+        '.contact-card > div'
+      ).forEach(el => targets.push(el));
+
+      return [...new Set(targets)];
+    };
+
+    const replaySection = (section) => {
+      if (reduceMotion) return;
+
+      const targets = reScrollTargets(section);
+      targets.forEach((el, index) => {
+        if (!el.animate) return;
+
+        // Cancel only our own previous replay on this target.
+        if (el.getAnimations) {
+          el.getAnimations().forEach(anim => {
+            if (anim.id && anim.id.startsWith('portfolio-rescroll-')) anim.cancel();
+          });
+        }
+
+        const anim = el.animate(
+          [
+            { opacity: 0.88, transform: 'translateY(9px)' },
+            { opacity: 1, transform: 'translateY(0)' }
+          ],
+          {
+            duration: 820,
+            delay: Math.min(index * 35, 140),
+            easing: 'cubic-bezier(.22,.68,.2,1)',
+            fill: 'none'
+          }
+        );
+        anim.id = `portfolio-rescroll-${index}`;
+      });
+    };
+
+    /* A section must fully leave the viewport before it can replay.
+       On the next entry, wait until a meaningful amount is visible.
+       This avoids triggering at the screen border. */
+    const reScrollState = new WeakMap();
+    majorSections.forEach(section => reScrollState.set(section, { seen: false, outside: true }));
+
+    const reScrollObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        const section = entry.target;
+        const state = reScrollState.get(section) || { seen: false, outside: true };
+
+        if (entry.isIntersecting) {
+          if (state.seen && state.outside) {
+            replaySection(section);
+          }
+          state.seen = true;
+          state.outside = false;
+        } else {
+          state.outside = true;
+        }
+
+        reScrollState.set(section, state);
+      });
+    }, {
+      threshold: 0.12,
+      rootMargin: '-8% 0px -8% 0px'
+    });
+
+    majorSections.forEach(section => reScrollObserver.observe(section));
 
     /* Keep a clear "current chapter" cue while scrolling. */
     const currentObserver = new IntersectionObserver(entries => {
