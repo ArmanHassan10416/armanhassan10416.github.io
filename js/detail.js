@@ -1,3 +1,5 @@
+/* SUBTLE PROFESSIONAL DETAIL MOTION BUILD: 20260913-subtle-motion-v2 */
+/* REFERENCE-INSPIRED DETAIL MOTION BUILD: 20260913-reference-motion-v1 */
 /* CLEAN SECONDARY PAGE HIERARCHY BUILD: 20260910-alt-sections-clean-v1 */
 /* PROFESSIONAL NO-NUMBERING DETAIL BUILD: 20260910-professional-no-numbers */
 /* DETAIL PAGE BUILD: 20260910-final2 */
@@ -232,6 +234,13 @@
       '.detail-section, .detail-side-card, .detail-gallery-section, .gallery-item, .video-card, .subproject-case, .detail-next'
     )
   ];
+
+  /* Varied case-study entrance directions, matching the homepage motion language. */
+  document.querySelectorAll('.detail-section').forEach((el, i) => {
+    el.classList.add(i % 2 === 0 ? 'detail-motion-left' : 'detail-motion-right');
+  });
+  document.querySelectorAll('.detail-side-card').forEach(el => el.classList.add('detail-motion-scale'));
+  document.querySelectorAll('.gallery-item, .video-card, .subproject-case').forEach(el => el.classList.add('detail-motion-scale'));
 
   motionTargets.forEach((el, i) => {
     el.classList.add('detail-motion');

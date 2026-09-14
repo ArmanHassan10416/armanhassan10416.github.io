@@ -1,3 +1,5 @@
+/* SUBTLE PROFESSIONAL MOTION BUILD: 20260913-subtle-motion-v2 */
+/* REFERENCE-INSPIRED MOTION BUILD: 20260913-reference-motion-v1 */
 /* CLEAN BRIDGE MARKERS BUILD: 20260910-clean-bridge-icons-v1 */
 /* CLEAN STRUCTURAL HIERARCHY BUILD: 20260910-alt-sections-clean-v1 */
 /* SECTION TRANSITION BUILD: 20260910-section-transitions-v2 */
@@ -175,7 +177,48 @@
   }));
 
   const revealItems = [...document.querySelectorAll('.reveal')];
-  revealItems.forEach((el, index) => el.style.setProperty('--reveal-delay', `${(index % 4) * 70}ms`));
+
+  /* Reference-style motion directions:
+     restrained slide / fade / scale rather than one repeated fade-up. */
+  const applyMotionClass = (el, cls) => {
+    el.classList.remove('motion-left', 'motion-right', 'motion-up', 'motion-scale');
+    el.classList.add(cls);
+  };
+
+  document.querySelectorAll('.interest-grid .reveal').forEach((el, i) => {
+    applyMotionClass(el, i % 3 === 0 ? 'motion-left' : i % 3 === 2 ? 'motion-right' : 'motion-up');
+  });
+
+  document.querySelectorAll('.research-grid-compact .reveal').forEach((el, i) => {
+    applyMotionClass(el, i % 2 === 0 ? 'motion-left' : 'motion-right');
+  });
+
+  document.querySelectorAll('.publication-list .reveal').forEach(el => applyMotionClass(el, 'motion-left'));
+
+  document.querySelectorAll('.project-grid .reveal').forEach(el => applyMotionClass(el, 'motion-scale'));
+
+  const experienceColumns = document.querySelectorAll('.experience-grid > div');
+  experienceColumns.forEach((column, columnIndex) => {
+    column.querySelectorAll('.timeline-item.reveal').forEach(el => {
+      applyMotionClass(el, columnIndex % 2 === 0 ? 'motion-left' : 'motion-right');
+    });
+  });
+
+  document.querySelectorAll('.education-card.reveal, .skills-grid .reveal, .contact-card.reveal')
+    .forEach(el => applyMotionClass(el, 'motion-scale'));
+
+  const aboutGrid = document.querySelector('.about-grid');
+  if (aboutGrid) {
+    const aboutHeading = aboutGrid.querySelector('.section-head.reveal');
+    const aboutCopy = aboutGrid.querySelector('.about-copy.reveal');
+    if (aboutHeading) applyMotionClass(aboutHeading, 'motion-left');
+    if (aboutCopy) applyMotionClass(aboutCopy, 'motion-right');
+  }
+
+  revealItems.forEach((el, index) => {
+    el.style.setProperty('--reveal-delay', `${(index % 4) * 85}ms`);
+  });
+
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -183,8 +226,36 @@
         observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.08, rootMargin: '0px 0px -4% 0px' });
+  }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
   revealItems.forEach(el => observer.observe(el));
+
+  /* Child-level staged entrances for process / bridge / honors elements. */
+  const sequenceItems = [
+    ...document.querySelectorAll('.workflow-step'),
+    ...document.querySelectorAll('.bridge-stage'),
+    ...document.querySelectorAll('.bridge-arrow'),
+    ...document.querySelectorAll('.honors-strip > div')
+  ];
+
+  sequenceItems.forEach((el, i) => {
+    el.classList.add('sequence-reveal');
+    el.style.setProperty('--sequence-delay', `${(i % 7) * 95}ms`);
+  });
+
+  const sequenceObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const group = entry.target.closest('.workflow, .bridge-stages, .honors-strip') || entry.target.parentElement;
+      if (group) {
+        [...group.querySelectorAll('.sequence-reveal')].forEach(child => child.classList.add('sequence-in'));
+      } else {
+        entry.target.classList.add('sequence-in');
+      }
+      sequenceObserver.unobserve(entry.target);
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+  sequenceItems.forEach(el => sequenceObserver.observe(el));
 
   document.querySelectorAll('.stat').forEach((el, index) => el.style.setProperty('--stat-delay', `${100 + index * 65}ms`));
   requestAnimationFrame(() => requestAnimationFrame(() => $('#stats').classList.add('stats-ready')));
