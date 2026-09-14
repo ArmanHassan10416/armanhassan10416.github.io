@@ -1,4 +1,4 @@
-/* RELIABLE SUBTLE RE-SCROLL BUILD: 20260914-rescroll-reliable-v4 */
+/* VIEWPORT-CENTER RE-SCROLL BUILD: 20260914-rescroll-center-trigger-v5 */
 /* SUBTLE PROFESSIONAL MOTION BUILD: 20260913-subtle-motion-v2 */
 /* REFERENCE-INSPIRED MOTION BUILD: 20260913-reference-motion-v1 */
 /* CLEAN BRIDGE MARKERS BUILD: 20260910-clean-bridge-icons-v1 */
@@ -353,103 +353,130 @@
     majorSections.forEach(section => sectionObserver.observe(section));
 
     /* -------------------------------------------------------
-       Gentle section re-entry replay
+       Re-scroll section replay — viewport-center trigger
        -------------------------------------------------------
-       Important: the existing section/container reveal rules use
-       !important transforms. Animating those same elements can be
-       suppressed by CSS. So re-scroll motion is applied only to
-       inner group wrappers that are not owned by the one-time
-       reveal system. This makes the replay actually visible and
-       keeps it independent from the first-load animations. */
+       The first-time reveal remains exactly as before.
 
-    const reScrollTargets = (section) => {
+       For later visits, do NOT rely on IntersectionObserver enter/leave
+       state. Instead, treat the section crossed by the viewport center
+       as the active chapter. When the center crosses back into a section
+       that has already been active before, replay a smaller animation.
+
+       This works even for very tall sections and does not require a
+       section to become fully non-intersecting first.
+    */
+
+    const replayTargets = (section) => {
       const targets = [];
 
-      // Section title copy: animate the inner text block, not .section-head itself.
-      const titleCopy = section.querySelector('.section-head > div:last-child');
-      if (titleCopy) targets.push(titleCopy);
+      // A section can contain more than one .container (Skills + Honors).
+      section.querySelectorAll(':scope > .container').forEach(container => {
+        [...container.children].forEach(child => {
+          if (child.classList.contains('section-head')) {
+            // Avoid animating .section-head itself because first-load CSS
+            // owns its transform. Animate its inner copy instead.
+            const copy = child.querySelector(':scope > div:last-child');
+            if (copy) targets.push(copy);
+          } else {
+            // Direct group wrappers are not controlled by the one-time
+            // reveal transform, so they are safe re-scroll targets.
+            targets.push(child);
+          }
+        });
+      });
 
-      // Main content groups for each section.
-      section.querySelectorAll(
-        '.interest-grid, ' +
-        '.research-grid-compact, ' +
-        '.publication-list, ' +
-        '.bridge-stages, ' +
-        '.project-grid, ' +
-        '.experience-grid, ' +
-        '.skills-grid, ' +
-        '.about-grid'
-      ).forEach(el => targets.push(el));
-
-      // Additional content whose parent has one-time reveal styles.
-      section.querySelectorAll(
-        '.education-card > div, ' +
-        '.honors-strip > div, ' +
-        '.contact-card > div'
-      ).forEach(el => targets.push(el));
-
-      return [...new Set(targets)];
+      return [...new Set(targets)].filter(Boolean);
     };
 
-    const replaySection = (section) => {
+    const replaySectionOnReturn = (section) => {
       if (reduceMotion) return;
 
-      const targets = reScrollTargets(section);
-      targets.forEach((el, index) => {
+      replayTargets(section).forEach((el, index) => {
         if (!el.animate) return;
 
-        // Cancel only our own previous replay on this target.
         if (el.getAnimations) {
           el.getAnimations().forEach(anim => {
-            if (anim.id && anim.id.startsWith('portfolio-rescroll-')) anim.cancel();
+            if (anim.id && anim.id.startsWith('portfolio-return-')) anim.cancel();
           });
         }
 
         const anim = el.animate(
           [
-            { opacity: 0.88, transform: 'translateY(9px)' },
+            { opacity: 0.80, transform: 'translateY(14px)' },
             { opacity: 1, transform: 'translateY(0)' }
           ],
           {
-            duration: 820,
-            delay: Math.min(index * 35, 140),
+            duration: 900,
+            delay: Math.min(index * 45, 180),
             easing: 'cubic-bezier(.22,.68,.2,1)',
             fill: 'none'
           }
         );
-        anim.id = `portfolio-rescroll-${index}`;
+        anim.id = `portfolio-return-${index}`;
       });
     };
 
-    /* A section must fully leave the viewport before it can replay.
-       On the next entry, wait until a meaningful amount is visible.
-       This avoids triggering at the screen border. */
-    const reScrollState = new WeakMap();
-    majorSections.forEach(section => reScrollState.set(section, { seen: false, outside: true }));
+    const seenActiveSections = new WeakSet();
+    let centerActiveSection = null;
+    let centerTickQueued = false;
 
-    const reScrollObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        const section = entry.target;
-        const state = reScrollState.get(section) || { seen: false, outside: true };
+    const getCenterSection = () => {
+      const probeY = window.innerHeight * 0.50;
+      let best = null;
+      let bestDistance = Infinity;
 
-        if (entry.isIntersecting) {
-          if (state.seen && state.outside) {
-            replaySection(section);
-          }
-          state.seen = true;
-          state.outside = false;
-        } else {
-          state.outside = true;
+      majorSections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+
+        // Preferred case: the viewport center is physically inside section.
+        if (rect.top <= probeY && rect.bottom >= probeY) {
+          best = section;
+          bestDistance = 0;
+          return;
         }
 
-        reScrollState.set(section, state);
-      });
-    }, {
-      threshold: 0.12,
-      rootMargin: '-8% 0px -8% 0px'
-    });
+        // Fallback during gaps / exact boundaries.
+        const distance = probeY < rect.top
+          ? rect.top - probeY
+          : probeY - rect.bottom;
 
-    majorSections.forEach(section => reScrollObserver.observe(section));
+        if (distance < bestDistance) {
+          best = section;
+          bestDistance = distance;
+        }
+      });
+
+      return best;
+    };
+
+    const updateCenterSection = () => {
+      centerTickQueued = false;
+      const next = getCenterSection();
+      if (!next || next === centerActiveSection) return;
+
+      const isReturnVisit = seenActiveSections.has(next);
+
+      centerActiveSection = next;
+      seenActiveSections.add(next);
+
+      if (isReturnVisit) {
+        // Wait one frame so the newly active section has settled before
+        // starting the intentionally smaller return animation.
+        requestAnimationFrame(() => replaySectionOnReturn(next));
+      }
+    };
+
+    const queueCenterSectionUpdate = () => {
+      if (centerTickQueued) return;
+      centerTickQueued = true;
+      requestAnimationFrame(updateCenterSection);
+    };
+
+    // Establish the initial chapter without replaying it.
+    updateCenterSection();
+
+    window.addEventListener('scroll', queueCenterSectionUpdate, { passive: true });
+    window.addEventListener('resize', queueCenterSectionUpdate);
 
     /* Keep a clear "current chapter" cue while scrolling. */
     const currentObserver = new IntersectionObserver(entries => {
