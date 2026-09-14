@@ -1,3 +1,4 @@
+/* FIXED RE-SCROLL TRIGGER BUILD: 20260914-rescroll-fixed-v2 */
 /* SUBTLE RE-SCROLL SECTION MOTION BUILD: 20260914-subtle-rescroll-v1 */
 /* SUBTLE PROFESSIONAL MOTION BUILD: 20260913-subtle-motion-v2 */
 /* REFERENCE-INSPIRED MOTION BUILD: 20260913-reference-motion-v1 */
@@ -367,8 +368,11 @@
         }
       });
     }, {
-      threshold: 0.07,
-      rootMargin: '0px 0px -10% 0px'
+      // Use an inset viewport band rather than an edge trigger.
+      // This prevents the replay from finishing before the user
+      // actually sees the section content.
+      threshold: 0,
+      rootMargin: '-16% 0px -16% 0px'
     });
 
     majorSections.forEach(section => sectionObserver.observe(section));

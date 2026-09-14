@@ -1,3 +1,4 @@
+/* FIXED RE-SCROLL STYLE BUILD: 20260914-rescroll-fixed-v2 */
 /* SUBTLE RE-SCROLL STYLE BUILD: 20260914-subtle-rescroll-v1 */
 /* SUBTLE PROFESSIONAL MOTION STYLE BUILD: 20260913-subtle-motion-v2 */
 /* REFERENCE-INSPIRED MOTION STYLE BUILD: 20260913-reference-motion-v1 */
@@ -2455,6 +2456,67 @@ body.detail-page-ready .detail-root{
 }
 
 /* Reduced-motion visitors still get no movement. */
+@media (prefers-reduced-motion:reduce){
+  .section-motion-ready .portfolio-section.section-seen:not(.section-active) > .container,
+  .section-motion-ready .portfolio-section.section-seen.section-active > .container,
+  .section-motion-ready .portfolio-section.section-seen:not(.section-active) .section-head,
+  .section-motion-ready .portfolio-section.section-seen.section-active .section-head{
+    opacity:1 !important;
+    transform:none !important;
+    transition:none !important;
+  }
+}
+
+
+/* ==========================================================
+   RE-SCROLL VISIBILITY FIX
+   Trigger now occurs inside the viewport rather than at its edge.
+   These values remain much softer than the first-time reveal.
+   ========================================================== */
+
+.section-motion-ready .portfolio-section.section-seen:not(.section-active) > .container{
+  opacity:.87 !important;
+  transform:translateY(8px) !important;
+  transition:
+    opacity .78s ease,
+    transform .84s cubic-bezier(.22,.68,.2,1) !important;
+}
+
+.section-motion-ready .portfolio-section.section-seen.section-active > .container{
+  opacity:1 !important;
+  transform:translateY(0) !important;
+  transition:
+    opacity .78s ease,
+    transform .84s cubic-bezier(.22,.68,.2,1) !important;
+}
+
+.section-motion-ready .portfolio-section.section-seen:not(.section-active) .section-head{
+  opacity:.91 !important;
+  transform:translateY(5px) !important;
+  transition:
+    opacity .72s ease,
+    transform .80s cubic-bezier(.22,.68,.2,1) !important;
+}
+
+.section-motion-ready .portfolio-section.section-seen.section-active .section-head{
+  opacity:1 !important;
+  transform:translateY(0) !important;
+}
+
+/* Keep mobile even calmer. */
+@media (max-width:760px){
+  .section-motion-ready .portfolio-section.section-seen:not(.section-active) > .container{
+    opacity:.91 !important;
+    transform:translateY(5px) !important;
+  }
+
+  .section-motion-ready .portfolio-section.section-seen:not(.section-active) .section-head{
+    opacity:.95 !important;
+    transform:translateY(3px) !important;
+  }
+}
+
+/* Preserve reduced-motion behavior. */
 @media (prefers-reduced-motion:reduce){
   .section-motion-ready .portfolio-section.section-seen:not(.section-active) > .container,
   .section-motion-ready .portfolio-section.section-seen.section-active > .container,
