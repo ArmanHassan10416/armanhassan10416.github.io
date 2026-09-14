@@ -1,3 +1,4 @@
+/* GUARANTEED RE-SCROLL MOTION BUILD: 20260914-rescroll-waapi-v3 */
 /* FIXED RE-SCROLL TRIGGER BUILD: 20260914-rescroll-fixed-v2 */
 /* SUBTLE RE-SCROLL SECTION MOTION BUILD: 20260914-subtle-rescroll-v1 */
 /* SUBTLE PROFESSIONAL MOTION BUILD: 20260913-subtle-motion-v2 */
@@ -338,41 +339,107 @@
       });
     };
 
+    const replaySectionMotion = (section) => {
+      if (reduceMotion) return;
+
+      const container = section.querySelector(':scope > .container');
+      const heading = section.querySelector('.section-head');
+      const marker = section.querySelector('.section-marker');
+
+      /* Cancel any previous replay on this section so fast scrolling
+         never leaves two animations fighting each other. */
+      [container, heading, marker].forEach(el => {
+        if (!el || !el.getAnimations) return;
+        el.getAnimations().forEach(anim => {
+          if (anim.id && anim.id.startsWith('section-rescroll-')) anim.cancel();
+        });
+      });
+
+      if (container) {
+        const animation = container.animate(
+          [
+            { opacity: 0.90, transform: 'translateY(8px)' },
+            { opacity: 1, transform: 'translateY(0)' }
+          ],
+          {
+            duration: 760,
+            easing: 'cubic-bezier(.22,.68,.2,1)',
+            fill: 'none'
+          }
+        );
+        animation.id = 'section-rescroll-container';
+      }
+
+      if (heading) {
+        const animation = heading.animate(
+          [
+            { opacity: 0.94, transform: 'translateY(4px)' },
+            { opacity: 1, transform: 'translateY(0)' }
+          ],
+          {
+            duration: 680,
+            easing: 'cubic-bezier(.22,.68,.2,1)',
+            fill: 'none'
+          }
+        );
+        animation.id = 'section-rescroll-heading';
+      }
+
+      if (marker) {
+        const animation = marker.animate(
+          [
+            { opacity: 0.68, transform: 'scaleY(.88)' },
+            { opacity: 1, transform: 'scaleY(1)' }
+          ],
+          {
+            duration: 620,
+            easing: 'cubic-bezier(.22,.68,.2,1)',
+            fill: 'none'
+          }
+        );
+        animation.id = 'section-rescroll-marker';
+      }
+    };
+
     const sectionObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         const section = entry.target;
 
         if (entry.isIntersecting) {
           const hasBeenSeen = section.dataset.sectionSeen === 'true';
+          const wasInside = section.dataset.sectionInside === 'true';
 
-          // First visit uses the normal subtle section reveal.
-          // Re-visits keep the section marked as "seen" so CSS uses
-          // a much smaller movement / opacity change.
           if (hasBeenSeen) section.classList.add('section-seen');
-
           activateSection(section);
 
-          if (!hasBeenSeen) {
-            section.dataset.sectionSeen = 'true';
+          /* On the first visit we keep the normal site reveal.
+             On every later genuine re-entry, replay a smaller motion
+             directly with the Web Animations API. */
+          if (hasBeenSeen && !wasInside) {
+            requestAnimationFrame(() => replaySectionMotion(section));
+          }
 
-            // Only enable the gentler re-scroll state after the
-            // first entrance has had time to complete.
+          section.dataset.sectionSeen = 'true';
+          section.dataset.sectionInside = 'true';
+
+          if (!hasBeenSeen) {
             window.setTimeout(() => {
               section.classList.add('section-seen');
             }, 1150);
           }
-        } else if (section.dataset.sectionSeen === 'true') {
-          // Reset only the section-level state after it leaves the
-          // viewport. Child cards/items remain permanently revealed.
-          section.classList.remove('section-active');
+        } else {
+          section.dataset.sectionInside = 'false';
+
+          if (section.dataset.sectionSeen === 'true') {
+            section.classList.remove('section-active');
+          }
         }
       });
     }, {
-      // Use an inset viewport band rather than an edge trigger.
-      // This prevents the replay from finishing before the user
-      // actually sees the section content.
+      /* Trigger after the section has entered the inner viewport,
+         not when it merely touches the screen edge. */
       threshold: 0,
-      rootMargin: '-16% 0px -16% 0px'
+      rootMargin: '-12% 0px -12% 0px'
     });
 
     majorSections.forEach(section => sectionObserver.observe(section));

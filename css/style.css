@@ -1,3 +1,4 @@
+/* GUARANTEED RE-SCROLL MOTION STYLE BUILD: 20260914-rescroll-waapi-v3 */
 /* FIXED RE-SCROLL STYLE BUILD: 20260914-rescroll-fixed-v2 */
 /* SUBTLE RE-SCROLL STYLE BUILD: 20260914-subtle-rescroll-v1 */
 /* SUBTLE PROFESSIONAL MOTION STYLE BUILD: 20260913-subtle-motion-v2 */
@@ -2525,5 +2526,35 @@ body.detail-page-ready .detail-root{
     opacity:1 !important;
     transform:none !important;
     transition:none !important;
+  }
+}
+
+
+/* ==========================================================
+   GUARANTEED RE-SCROLL REPLAY
+   Revisited sections are animated directly by app.js via WAAPI.
+   Disable the older section keyframe only on revisits so it
+   cannot mask or compete with that replay.
+   ========================================================== */
+
+.portfolio-section.section-seen.section-active > .container{
+  animation:none !important;
+}
+
+/* Keep the previously viewed off-screen section almost at rest.
+   The visible replay itself is supplied by JavaScript. */
+.section-motion-ready .portfolio-section.section-seen:not(.section-active) > .container{
+  opacity:.95 !important;
+  transform:translateY(3px) !important;
+}
+
+.section-motion-ready .portfolio-section.section-seen:not(.section-active) .section-head{
+  opacity:.97 !important;
+  transform:translateY(2px) !important;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .portfolio-section.section-seen.section-active > .container{
+    animation:none !important;
   }
 }
