@@ -2391,173 +2391,163 @@ body.detail-page-ready .detail-root{
   }
 }
 /* ==========================================================
-   NAVBAR POLISH — PROFESSIONAL ACADEMIC VERSION
+   NAVBAR — PROFESSIONAL ACADEMIC VERSION
    ========================================================== */
 
-/* Give the header its own clear visual layer */
+/* Distinct navbar surface */
 .nav {
-  background: rgba(255, 255, 255, 0.94) !important;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-
-  border-bottom: 1px solid rgba(16, 32, 51, 0.09) !important;
-  box-shadow: 0 5px 22px rgba(16, 32, 51, 0.055);
-
   position: sticky;
   top: 0;
   z-index: 50;
+
+  background: rgba(229, 239, 244, 0.97);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border-bottom: 1px solid rgba(12, 39, 58, 0.11);
+  box-shadow: 0 4px 18px rgba(12, 39, 58, 0.045);
 }
 
-/* Slightly more compact than the current header */
 .nav-inner {
-  height: 68px !important;
+  height: 68px;
 }
+
 
 /* ----------------------------------------------------------
-   NAME / IDENTITY
+   NAME / BRAND
    ---------------------------------------------------------- */
 
 .brand {
-  color: var(--navy) !important;
+  color: #0b2239;
 
-  font-size: 1.08rem !important;
-  font-weight: 850 !important;
-
-  letter-spacing: 0.065em !important;
+  font-size: 1.15rem;
+  font-weight: 800;
   line-height: 1;
 
+  letter-spacing: 0.035em;
   white-space: nowrap;
 }
 
+
 /* ----------------------------------------------------------
-   NAVIGATION
+   NAVIGATION LINKS
    ---------------------------------------------------------- */
 
 .nav-links {
-  gap: 5px !important;
+  gap: 5px;
 
-  font-size: 0.87rem !important;
+  font-size: 0.86rem;
   font-weight: 520;
-
-  color: #637184 !important;
 }
 
-/* Give each tab its own interaction area */
 .nav-links a {
   position: relative;
 
-  padding: 9px 10px;
-  border-radius: 9px;
+  padding: 9px 11px;
+  border-radius: 8px;
+
+  color: #596b7b;
 
   transition:
     color 0.22s ease,
     background-color 0.22s ease;
 }
 
-/* Calm hover state */
+/* Hover */
 .nav-links a:hover {
-  color: var(--navy) !important;
-  background: rgba(40, 164, 191, 0.055);
+  color: #102f46;
+  background: rgba(36, 132, 157, 0.09);
 }
 
+
 /* ----------------------------------------------------------
-   ACTIVE TAB
-   Much clearer than the old underline-only state
+   ACTIVE SECTION
+   Clearly visible but still restrained
    ---------------------------------------------------------- */
 
 .nav-links a.active {
-  color: var(--navy) !important;
+  color: #082f44;
+
+  background: rgba(35, 137, 162, 0.18);
 
   font-weight: 700;
 
-  background: rgba(40, 164, 191, 0.09);
+  box-shadow:
+    inset 0 0 0 1px rgba(35, 137, 162, 0.08);
 }
 
-/* Replace the long underline with a short integrated accent */
+/* Short accent inside active pill */
 .nav-links a::after {
   content: "";
 
   position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 3px;
 
-  left: 10px !important;
-  right: 10px !important;
-  bottom: 3px !important;
-
-  height: 2px !important;
-
+  height: 2px;
   border-radius: 999px;
 
-  background: var(--cyan) !important;
+  background: #258fa8;
 
-  transform: scaleX(0) !important;
-  transform-origin: center !important;
-
-  opacity: 0 !important;
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: center;
 
   transition:
-    transform 0.28s ease,
-    opacity 0.28s ease !important;
+    opacity 0.25s ease,
+    transform 0.25s ease;
 }
 
 .nav-links a.active::after {
-  transform: scaleX(1) !important;
-  opacity: 0.9 !important;
+  opacity: 1;
+  transform: scaleX(1);
 }
 
-/* Hover shouldn't create a competing underline */
-.nav-links a:hover::after {
-  transform: scaleX(0) !important;
-  opacity: 0 !important;
-}
-
-.nav-links a.active:hover::after {
-  transform: scaleX(1) !important;
-  opacity: 0.9 !important;
-}
 
 /* ----------------------------------------------------------
-   EMAIL / CV BUTTONS
+   NAVBAR ACTION BUTTONS
    ---------------------------------------------------------- */
 
 .nav-actions {
-  gap: 9px !important;
+  gap: 9px;
 }
 
 .nav-btn {
-  padding: 9px 15px !important;
-
   min-height: 42px;
+
+  padding: 9px 15px;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  font-size: 0.9rem;
-  font-weight: 700;
-
   border-radius: 999px;
+
+  font-size: 0.89rem;
+  font-weight: 700;
 
   transition:
     transform 0.2s ease,
-    box-shadow 0.2s ease,
-    background-color 0.2s ease;
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-/* Email stays secondary */
+/* Email — secondary action */
 .nav-btn:not(.primary) {
-  background: rgba(255, 255, 255, 0.8) !important;
+  color: #102d42;
 
-  border-color: rgba(16, 32, 51, 0.12) !important;
+  background: rgba(255, 255, 255, 0.70);
 
-  color: var(--navy);
+  border: 1px solid rgba(15, 42, 61, 0.13);
 }
 
-/* CV stays primary */
+/* Download CV — primary action */
 .nav-btn.primary {
-  background: var(--navy) !important;
-  color: white !important;
+  color: #ffffff;
 
-  border-color: var(--navy) !important;
+  background: #0b2239;
+  border-color: #0b2239;
 
   box-shadow: 0 4px 12px rgba(7, 26, 47, 0.10);
 }
@@ -2566,40 +2556,37 @@ body.detail-page-ready .detail-root{
   transform: translateY(-1px);
 }
 
+
 /* ----------------------------------------------------------
-   READING PROGRESS
-   Keep it, but make it much more elegant
+   READING PROGRESS BAR
    ---------------------------------------------------------- */
 
 .scroll-progress {
-  height: 2px !important;
+  height: 2px;
 
-  background:
-    linear-gradient(
-      90deg,
-      #237f99,
-      #41afbf
-    ) !important;
+  background: linear-gradient(
+    90deg,
+    #238ba4,
+    #4cb8c6
+  );
 
-  box-shadow: none !important;
-
-  opacity: 0.78;
-
-  z-index: 500;
+  box-shadow: none;
+  opacity: 0.85;
 }
 
+
 /* ----------------------------------------------------------
-   RESPONSIVE TUNING
+   RESPONSIVE
    ---------------------------------------------------------- */
 
 @media (max-width: 1100px) {
   .brand {
-    font-size: 1rem !important;
+    font-size: 1.06rem;
   }
 
   .nav-links {
-    gap: 2px !important;
-    font-size: 0.83rem !important;
+    gap: 2px;
+    font-size: 0.82rem;
   }
 
   .nav-links a {
@@ -2608,18 +2595,17 @@ body.detail-page-ready .detail-root{
   }
 
   .nav-btn {
-    padding-left: 13px !important;
-    padding-right: 13px !important;
+    padding-left: 13px;
+    padding-right: 13px;
   }
 }
 
-/* Don't interfere with the existing mobile menu system */
 @media (max-width: 860px) {
   .nav-inner {
-    height: 66px !important;
+    height: 66px;
   }
 
   .brand {
-    font-size: 1.02rem !important;
+    font-size: 1.02rem;
   }
 }
