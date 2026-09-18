@@ -1,3 +1,5 @@
+/* CONSOLIDATED RENDER BUILD: 20260919-consolidated-v1 */
+/* EQUAL RESEARCH INTERESTS RENDER BUILD: 20260918-equal-research-interests-v1 */
 /* SUBTLE PROFESSIONAL MOTION BUILD: 20260913-subtle-motion-v2 */
 /* REFERENCE-INSPIRED MOTION BUILD: 20260913-reference-motion-v1 */
 /* CLEAN BRIDGE MARKERS BUILD: 20260910-clean-bridge-icons-v1 */
@@ -50,12 +52,32 @@
 
   $('#stats').innerHTML = d.academicStats.map(s => `<div class="stat"><strong>${esc(s.value)}</strong><span>${esc(s.label)}</span></div>`).join('');
 
+  if (d.site.sections.education) {
+    $('#education').innerHTML = `
+      <div class="section-head reveal">${sectionAccent()}<div><p class="eyebrow">Academic Background</p><h2>Education</h2><p>Degree and undergraduate research context.</p></div></div>
+      <article class="education-feature-card reveal">
+        <div class="education-main">
+          <p class="education-date">${esc(d.education.graduation)}</p>
+          <h3>${esc(d.education.degree)}</h3>
+          <p class="education-institution">${esc(d.education.institution)}</p>
+        </div>
+        <div class="education-research">
+          <p class="micro-label">Undergraduate Thesis</p>
+          <h4>${esc(d.education.thesis)}</h4>
+          <div class="education-people">
+            <span><strong>Supervisor</strong>${esc(d.education.supervisor)}</span>
+            <span><strong>Research Mentor</strong>${esc(d.education.researchMentor)}</span>
+          </div>
+        </div>
+      </article>`;
+  }
+
+
   if (d.site.sections.researchInterests) {
     $('#research-interests').innerHTML = `
-      <div class="section-head reveal">${sectionAccent()}<div><p class="eyebrow">Research direction</p><h2>Research Interests</h2><p>Material systems and mechanical architectures where composition, geometry, interfaces, and structure create useful thermal or robotic behavior.</p></div></div>
+      <div class="section-head reveal">${sectionAccent()}<div><p class="eyebrow">Research direction</p><h2>Research Interests</h2><p>Material systems and mechanical architectures where composition, geometry, interfaces, and structure govern thermal, mechanical, and adaptive behavior.</p></div></div>
       <div class="interest-grid">${d.researchInterests.map((r, i) => `
-        <article class="interest-card ${esc(r.emphasis)} reveal">
-          <p class="micro-label">${esc(r.label)}</p>
+        <article class="interest-card ${esc(r.emphasis)} interest-card-${i + 1} reveal">
           <h3>${esc(r.title)}</h3>
           <p>${esc(r.description)}</p>
           <div class="tag-row">${tags(r.topics, 6)}</div>
@@ -121,12 +143,11 @@
 
   if (d.site.sections.experience) {
     $('#experience').innerHTML = `
-      <div class="section-head reveal">${sectionAccent()}<div><p class="eyebrow">Experience</p><h2>Experience & Education</h2></div></div>
+      <div class="section-head reveal">${sectionAccent()}<div><p class="eyebrow">Experience</p><h2>Engineering Experience</h2></div></div>
       <div class="experience-grid compact-experience">
         <div><h3 class="experience-label"><span class="subsection-accent" aria-hidden="true"></span>Professional Experience</h3>${d.professionalExperience.map(e => `<article class="timeline-item reveal"><span class="timeline-dot"></span><div><p class="period">${esc(e.period)}</p><h3>${esc(e.role)}</h3><p class="institution">${esc(e.organization)}</p><p>${esc(e.description)}</p></div></article>`).join('')}</div>
         <div><h3 class="experience-label"><span class="subsection-accent" aria-hidden="true"></span>Engineering Leadership</h3>${d.leadershipExperience.map(e => `<article class="timeline-item reveal"><span class="timeline-dot"></span><div><p class="period">${esc(e.period)}</p><h3>${esc(e.role)}</h3><p class="institution">${esc(e.organization)}</p><p>${esc(e.description)}</p></div></article>`).join('')}</div>
-      </div>
-      <article class="education-card reveal"><div><p class="eyebrow"><span class="subsection-accent inline-accent" aria-hidden="true"></span>Education</p><h3>${esc(d.education.degree)}</h3><p>${esc(d.education.institution)} · ${esc(d.education.graduation)}</p><p class="education-thesis"><strong>Thesis:</strong> ${esc(d.education.thesis)}</p></div><div class="education-metrics"><div><strong>${esc(d.education.cgpa)}</strong><span>CGPA</span></div><div><strong>${esc(d.education.rank)}</strong><span>Class Rank</span></div><div><strong>${esc(d.education.honors)}</strong><span>Academic Honor</span></div></div></article>`;
+      </div>`;
   }
 
   if (d.site.sections.skills) {
@@ -204,7 +225,7 @@
     });
   });
 
-  document.querySelectorAll('.education-card.reveal, .skills-grid .reveal, .contact-card.reveal')
+  document.querySelectorAll('.education-feature-card.reveal, .skills-grid .reveal, .contact-card.reveal')
     .forEach(el => applyMotionClass(el, 'motion-scale'));
 
   const aboutGrid = document.querySelector('.about-grid');
