@@ -66,7 +66,7 @@ window.portfolioData = {
     location: "Dhaka, Bangladesh",
     email: "armanhassan10416@gmail.com",
     phdStatus: "Fall 2027 PhD Applicant",
-    profileImage: "images/profile/arman.jpg",
+    profileImage: "images/profile/portfolio photo.jpg",
     cv: "documents/Arman_Hassan_Academic_CV.pdf",
     heroText: "Mechanical Engineering graduate from BUET working on molecular dynamics, thermal transport in polymer nanocomposites and heterostructures, alongside mechanical and robotic system development. I am particularly interested in programmable materials, architected structures, mechanical metamaterials, adaptive systems, and material-enabled robotics."
   },
