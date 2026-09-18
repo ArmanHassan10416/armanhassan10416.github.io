@@ -44,15 +44,7 @@
    Academic, restrained, and disabled for reduced motion.
    ========================================================== */
 
-/* A little depth when the sticky navigation separates from the page */
-.nav{
-  transition:background-color .28s ease,border-color .28s ease,box-shadow .28s ease;
-}
-.nav.nav-scrolled{
-  background:rgba(246,248,251,.94);
-  border-bottom-color:rgba(192,207,219,.9);
-  box-shadow:0 10px 30px rgba(16,32,51,.055);
-}
+
 
 /* Animated navigation underline */
 .nav-links a{
@@ -2390,114 +2382,121 @@ body.detail-page-ready .detail-root{
     animation:none !important;
   }
 }
+
 /* ==========================================================
-   NAVBAR — PROFESSIONAL ACADEMIC VERSION
+   NAVBAR — COMPLETE REWRITE
+   One opaque surface in both normal and scrolled states.
    ========================================================== */
 
-/* Distinct navbar surface */
-.nav {
+.nav,
+.nav.nav-scrolled {
   position: sticky;
   top: 0;
   z-index: 50;
 
-  background: rgba(205, 220, 229, 0.98);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  /* OPAQUE on purpose — page sections cannot change its appearance */
+  background: #e4edf2 !important;
 
-  border-bottom: 1px solid rgba(10, 36, 55, 0.15);
-  box-shadow: 0 4px 18px rgba(10, 36, 55, 0.07);
+  border-bottom: 1px solid #cad9e1;
+  box-shadow: 0 4px 16px rgba(11, 34, 57, 0.045);
+
+  transition:
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
+}
+
+/* Slightly stronger separation after scrolling, but NO color change */
+.nav.nav-scrolled {
+  background: #e4edf2 !important;
+  border-bottom-color: #c4d5de;
+  box-shadow: 0 7px 20px rgba(11, 34, 57, 0.06);
 }
 
 .nav-inner {
   height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
 }
 
-
-/* ----------------------------------------------------------
-   NAME / BRAND
-   ---------------------------------------------------------- */
-
+/* BRAND */
 .brand {
+  flex: 0 0 auto;
   color: #0b2239;
-
   font-size: 1.15rem;
   font-weight: 800;
   line-height: 1;
-
-  letter-spacing: 0.035em;
+  letter-spacing: 0.025em;
   white-space: nowrap;
 }
 
-
-/* ----------------------------------------------------------
-   NAVIGATION LINKS
-   ---------------------------------------------------------- */
-
+/* DESKTOP NAV LINKS */
 .nav-links {
+  display: flex;
+  align-items: center;
   gap: 5px;
 
+  color: #536776;
   font-size: 0.86rem;
-  font-weight: 520;
-  color: #455d6d !important;
+  font-weight: 550;
 }
 
 .nav-links a {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
   padding: 9px 11px;
   border-radius: 8px;
 
-  color: #596b7b;
+  color: #536776;
+  background: transparent;
 
   transition:
-    color 0.22s ease,
-    background-color 0.22s ease;
+    color 0.18s ease,
+    background-color 0.18s ease;
 }
 
-/* Hover */
 .nav-links a:hover {
-  color: #102f46;
-  background: rgba(36, 132, 157, 0.09);
+  color: #17384d;
+  background: #edf4f7;
 }
 
-
-/* ----------------------------------------------------------
-   ACTIVE SECTION
-   Clearly visible but still restrained
-   ---------------------------------------------------------- */
-
+/* ACTIVE TAB — deliberately light */
 .nav-links a.active {
-  color: #082f44;
-
-  background: rgba(25, 119, 146, 0.22);
-
+  color: #0d3b51;
+  background: #f4f8fa;
   font-weight: 700;
-
-  box-shadow:
-    inset 0 0 0 1px rgba(35, 137, 162, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(25, 93, 119, 0.08);
 }
 
-/* Short accent inside active pill */
+/* Short teal indicator */
 .nav-links a::after {
   content: "";
-
   position: absolute;
-  left: 12px;
-  right: 12px;
+  left: 13px;
+  right: 13px;
   bottom: 3px;
 
   height: 2px;
   border-radius: 999px;
 
-  background: #258fa8;
+  background: #2b8da4;
 
   opacity: 0;
   transform: scaleX(0);
   transform-origin: center;
 
   transition:
-    opacity 0.25s ease,
-    transform 0.25s ease;
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.nav-links a:hover::after {
+  opacity: 0.45;
+  transform: scaleX(0.65);
 }
 
 .nav-links a.active::after {
@@ -2505,18 +2504,16 @@ body.detail-page-ready .detail-root{
   transform: scaleX(1);
 }
 
-
-/* ----------------------------------------------------------
-   NAVBAR ACTION BUTTONS
-   ---------------------------------------------------------- */
-
+/* ACTION BUTTONS */
 .nav-actions {
+  display: flex;
+  align-items: center;
   gap: 9px;
+  flex: 0 0 auto;
 }
 
 .nav-btn {
   min-height: 42px;
-
   padding: 9px 15px;
 
   display: inline-flex;
@@ -2524,62 +2521,77 @@ body.detail-page-ready .detail-root{
   justify-content: center;
 
   border-radius: 999px;
-
-  font-size: 0.89rem;
+  font-size: 0.88rem;
   font-weight: 700;
 
   transition:
-    transform 0.2s ease,
-    background-color 0.2s ease,
-    box-shadow 0.2s ease;
+    transform 0.18s ease,
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
-/* Email — secondary action */
+/* Email */
 .nav-btn:not(.primary) {
-  color: #102d42;
-
-  background: rgba(255, 255, 255, 0.70);
-
-  border: 1px solid rgba(15, 42, 61, 0.13);
+  color: #15364a;
+  background: #f5f8fa;
+  border: 1px solid #c7d6de;
 }
 
-/* Download CV — primary action */
+/* Download CV */
 .nav-btn.primary {
   color: #ffffff;
-
   background: #0b2239;
-  border-color: #0b2239;
-
-  box-shadow: 0 4px 12px rgba(7, 26, 47, 0.10);
+  border: 1px solid #0b2239;
+  box-shadow: 0 4px 11px rgba(7, 26, 47, 0.09);
 }
 
 .nav-btn:hover {
   transform: translateY(-1px);
 }
 
-
-/* ----------------------------------------------------------
-   READING PROGRESS BAR
-   ---------------------------------------------------------- */
-
-.scroll-progress {
-  height: 2px;
-
-  background: linear-gradient(
-    90deg,
-    #238ba4,
-    #4cb8c6
-  );
-
-  box-shadow: none;
-  opacity: 0.85;
+.nav-btn:not(.primary):hover {
+  background: #ffffff;
+  border-color: #b9ccd6;
 }
 
+.nav-btn.primary:hover {
+  background: #102d46;
+  border-color: #102d46;
+}
 
-/* ----------------------------------------------------------
-   RESPONSIVE
-   ---------------------------------------------------------- */
+/* MOBILE MENU BUTTON */
+.menu-toggle {
+  display: none;
+  border: 0;
+  background: transparent;
+  color: #0b2239;
+  font-size: 1.35rem;
+  cursor: pointer;
+}
 
+/* READING PROGRESS */
+.scroll-progress {
+  position: fixed;
+  z-index: 500;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 2px;
+
+  transform: scaleX(0);
+  transform-origin: left center;
+
+  background: linear-gradient(90deg, #287f99, #50b5c3);
+  box-shadow: none;
+  opacity: 0.78;
+
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* RESPONSIVE */
 @media (max-width: 1100px) {
   .brand {
     font-size: 1.06rem;
@@ -2608,5 +2620,47 @@ body.detail-page-ready .detail-root{
 
   .brand {
     font-size: 1.02rem;
+  }
+
+  .nav-actions {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    position: absolute;
+    left: 13px;
+    right: 13px;
+    top: 72px;
+
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+
+    padding: 14px;
+
+    background: #f4f8fa;
+    border: 1px solid #cad9e1;
+    border-radius: 16px;
+    box-shadow: 0 16px 38px rgba(16, 32, 51, 0.10);
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .nav-links a {
+    justify-content: flex-start;
+    padding: 11px 12px;
+  }
+
+  .nav-links a::after {
+    left: 12px;
+    right: auto;
+    width: 28px;
   }
 }
